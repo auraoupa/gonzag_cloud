@@ -184,8 +184,8 @@ def Process4FFT( IDseg, Vd, VS, VM ):
             dx_sample = nmp.round(dmean,3)
             if ivrb>0: print('     => will use a spatial sample spacing of '+str(dx_sample)+' km\n')
                     
-        vs_s[js,:] = VS[it1:it2+1].values
-        vs_m[js,:] = VM[it1:it2+1].values
+        vs_s[js,:] = VS[it1:it2+1]
+        vs_m[js,:] = VM[it1:it2+1]
         
         # Linear detrending
         if l_detrend_lin:

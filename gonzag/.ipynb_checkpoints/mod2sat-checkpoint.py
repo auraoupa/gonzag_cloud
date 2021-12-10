@@ -122,7 +122,7 @@ class Model2SatTrack:
             [w1, w2, w3, w4]                    = BT.WB[jt-jt1,:]
 
             Sm = MG.mask[j1,i1] + MG.mask[j2,i2] + MG.mask[j3,i3] + MG.mask[j4,i4]
-            if Sm == 4:
+            if Sm == 4 and j1 > 0 and i1 > 0:
                 # All 4 model points are ocean point !
 
                 vssh_m_np[jt-jt1] = Xm[j1,i1] ; # Nearest-point "interpolation"
@@ -133,7 +133,7 @@ class Model2SatTrack:
                     if ivrb>0: print('    FLAGGING MISSING VALUE at jt = '+str(jt)+' !!!')
                 else:
                     vssh_m_bl[jt-jt1] = w1*Xm[j1,i1] + w2*Xm[j2,i2] + w3*Xm[j3,i3] + w4*Xm[j4,i4]
-
+            
             ktm1_o = ktm1 ; ktm2_o = ktm2
 
         # end of loop on jt
@@ -144,7 +144,7 @@ class Model2SatTrack:
 
 
         # Distance parcourue since first point:
-        for jt in range(jt1,jt2):
+        for jt in range(jt1+1,jt2):
             vdistance[jt-jt1] = vdistance[jt-jt1-1] + haversine_sclr( ST.lat[jt-jt1], ST.lon[jt-jt1], ST.lat[jt-jt1-1], ST.lon[jt-jt1-1] )
 
         # Satellite SSH:
@@ -155,7 +155,7 @@ class Model2SatTrack:
         self.lon        = ST.lon[jt1:jt2]
 
         imask = nmp.zeros(Nt,dtype=nmp.int8)
-        imask[nmp.where((vssh_m_bl>-100.) & (vssh_m_bl<100.))] = 1
+        imask[nmp.where((vssh_m_bl>-100.) & (vssh_m_bl<100.) & (vssh_m_bl==0.))] = 1
 
         vssh_m_np = nmp.ma.masked_where( imask==0, vssh_m_np )
         vssh_m_bl = nmp.ma.masked_where( imask==0, vssh_m_bl )
