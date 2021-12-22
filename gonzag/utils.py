@@ -140,8 +140,8 @@ def IsGlobalLongitudeWise( X, mask , resd=1. ):
     Xm   = nmp.ma.masked_where( mask==0, X    )
     xmin = nmp.amin(Xm) ; # in [0:360] frame...
     xmax = nmp.amax(Xm) ; #     "     "
-    imin = nmp.argmin(Xm)
-    imax = nmp.argmax(Xm)
+    imin = nmp.argmin(Xm)%nx
+    imax = nmp.argmax(Xm)%nx
     #
     xb = degE_to_degWE(Xm)
     xminB = nmp.amin(xb) ; # in [-180:+180] frame...
@@ -197,7 +197,7 @@ def scan_idx( rvt, rt1, rt2 ):
     '''
     import numpy as nmp
     from datetime import datetime as dtm
-    
+
     idx1=nmp.where(rvt>rt1)
     idx2=nmp.where(rvt<rt2)
 
@@ -466,7 +466,7 @@ class ModGrid:
         self.jt2   = jt2
 
         vtime = GetTimeVector( dataset, vartime, kt1=jt1, kt2=jt2 )
-        
+
         self.size = nt
         self.time = vtime
 
@@ -611,7 +611,7 @@ class SatTrack:
 
         self.size = len(self.time)
         self.keepit = keepit
-        
+
         vssh = GetSatSSH( self.file, name_ssh,  kt1=jt1, kt2=jt2-1)
         self.index_tracks = SeparateTracks( self.lat.values, self.lon.values, vssh )
 
